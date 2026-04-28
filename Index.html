@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>给宝宝的520惊喜</title>
+    <style>
+        :root { --primary-pink: #ff4d6d; --bg-cream: #fff0f3; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-cream); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(255, 77, 109, 0.2); width: 90%; max-width: 400px; text-align: center; }
+        .page { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        h1 { color: var(--primary-pink); font-size: 1.5rem; }
+        button { background-color: var(--primary-pink); color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-size: 1rem; margin-top: 20px; transition: 0.3s; }
+        button:hover { background-color: #ff758f; transform: scale(1.05); }
+        .options { text-align: left; margin: 20px 0; }
+        .options label { display: block; padding: 10px; background: #f8f9fa; margin-bottom: 5px; border-radius: 10px; cursor: pointer; }
+        input[type="radio"] { margin-right: 10px; }
+        video, iframe { width: 100%; border-radius: 15px; margin-top: 15px; border: none; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 10px; }
+        .day { padding: 5px; border: 1px solid #eee; font-size: 0.8rem; border-radius: 5px; cursor: pointer; }
+        .day:hover { background: var(--primary-pink); color: white; }
+        .selected-day { background: var(--primary-pink) !important; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <form id="loveForm" action="https://formspree.io/f/meevbpnk" method="POST">
+        
+        <div class="page active" id="p1">
+            <h1>我爱你 ❤️</h1>
+            <p>520快乐，宝贝！</p>
+            <button type="button" onclick="nextPage('p2')">开始</button>
+        </div>
+
+        <div class="page" id="p2">
+            <h1>哪天有空呀？</h1>
+            <p>5月日历</p>
+            <div class="calendar-grid">
+                <script>
+                    for(let i=1; i<=31; i++) {
+                        document.write(`<div class="day" onclick="selectDay(this, ${i})">${i}</div>`);
+                    }
+                </script>
+            </div>
+            <input type="hidden" name="date" id="selectedDate">
+            <button type="button" onclick="nextPage('p3')">下一步</button>
+        </div>
+
+        <div class="page" id="p3">
+            <h1>想吃什么？ 🍴</h1>
+            <div class="options">
+                <label><input type="radio" name="food" value="中餐" required> 中餐</label>
+                <label><input type="radio" name="food" value="意大利菜"> 意大利菜</label>
+                <label><input type="radio" name="food" value="俄国菜"> 俄国菜</label>
+                <label><input type="radio" name="food" value="海鲜"> 海鲜</label>
+                <label><input type="radio" name="food" value="其他"> 其他</label>
+            </div>
+            <button type="button" onclick="nextPage('p4')">下一步</button>
+        </div>
+
+        <div class="page" id="p4">
+            <h1>我的心里话 ✨</h1>
+            
+            <video controls>
+                <source src="video.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+
+            <button type="button" onclick="submitAndNext()">下一步</button>
+        </div>
+
+        <div class="page" id="p5">
+            <h1>爱你哟！ ❤️</h1>
+            <p>你的选择我已经收到啦。期待我们的约会！</p>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    function nextPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+    }
+
+    function selectDay(element, day) {
+        document.querySelectorAll('.day').forEach(d => d.classList.remove('selected-day'));
+        element.classList.add('selected-day');
+        document.getElementById('selectedDate').value = "5月" + day + "日";
+    }
+
+    function submitAndNext() {
+        const form = document.getElementById('loveForm');
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+        }).then(response => {
+            if (response.ok) {
+                nextPage('p5');
+            } else {
+                alert("出错啦，请重试。");
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
