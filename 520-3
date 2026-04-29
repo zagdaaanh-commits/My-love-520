@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>给宝贝的520惊喜</title>
+    <style>
+        /* Өнгөний тохиргоо (Нил ягаан) */
+        :root { 
+            --primary-purple: #9b5de5; 
+            --hover-purple: #8338ec;   
+            --bg-light: #f9f4ff;       
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg-light); 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+        }
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(155, 93, 229, 0.2); 
+            width: 90%; 
+            max-width: 400px; 
+            text-align: center; 
+        }
+        .page { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .active { display: block; }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        h1 { color: var(--primary-purple); font-size: 1.5rem; }
+        
+        button { 
+            background-color: var(--primary-purple); 
+            color: white; 
+            border: none; 
+            padding: 12px 25px; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            margin-top: 20px; 
+            transition: 0.3s; 
+        }
+        button:hover { background-color: var(--hover-purple); transform: scale(1.05); }
+        
+        .options { text-align: left; margin: 20px 0; }
+        .options label { 
+            display: block; 
+            padding: 10px; 
+            background: #f8f9fa; 
+            margin-bottom: 5px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            transition: 0.2s;
+        }
+        .options label:hover { background: #f0e6ff; }
+        input[type="radio"] { margin-right: 10px; accent-color: var(--primary-purple); }
+        
+        video, iframe { width: 100%; border-radius: 15px; margin-top: 15px; border: none; }
+        
+        /* Хуанлийн хэсгийн загвар */
+        .calendar-container {
+            max-height: 280px; 
+            overflow-y: auto; 
+            padding: 10px; 
+            border: 2px solid #f0e6ff; 
+            border-radius: 15px;
+            margin-top: 15px;
+        }
+        .calendar-container::-webkit-scrollbar { width: 6px; }
+        .calendar-container::-webkit-scrollbar-thumb { background: #dcbfff; border-radius: 10px; }
+        
+        .month-title { color: var(--primary-purple); margin: 10px 0; font-size: 1.2rem; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        
+        .day { 
+            padding: 8px 5px; 
+            border: 1px solid #f0e6ff; 
+            font-size: 0.9rem; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: 0.2s;
+        }
+        .day:hover { background: var(--primary-purple); color: white; }
+        .selected-day { background: var(--primary-purple) !important; color: white; font-weight: bold; transform: scale(1.1); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <form id="loveForm" action="https://formspree.io/f/ТАНЫ_ID_ЭНД" method="POST">
+        
+        <div class="page active" id="p1">
+            <h1>我爱你 💜</h1>
+            <p>520快乐，宝贝！</p>
+            <button type="button" onclick="nextPage('p2')">开始</button>
+        </div>
+
+        <div class="page" id="p2">
+            <h1>哪天有空呀？</h1>
+            <p style="color: #666; font-size: 0.9rem;">选择一个约会日期</p>
+            
+            <div class="calendar-container">
+                <div class="month-title">5月</div>
+                <div class="calendar-grid" id="may-grid"></div>
+
+                <div class="month-title" style="margin-top: 20px;">6月</div>
+                <div class="calendar-grid" id="june-grid"></div>
+            </div>
+
+            <input type="hidden" name="date" id="selectedDate">
+            <button type="button" onclick="checkDateAndNext('p3')">下一步</button>
+        </div>
+
+        <div class="page" id="p3">
+            <h1>想吃什么？ 🍴</h1>
+            <div class="options">
+                <label><input type="radio" name="food" value="中餐" required> 中餐 (Chinese food)</label>
+                <label><input type="radio" name="food" value="意大利菜"> 意大利菜 (Italian food)</label>
+                <label><input type="radio" name="food" value="俄国菜"> 俄国菜 (Russian food)</label>
+                <label><input type="radio" name="food" value="海鲜"> 海鲜 (Seafood)</label>
+                <label><input type="radio" name="food" value="其他"> 其他 (Other)</label>
+            </div>
+            <button type="button" onclick="nextPage('p4')">下一步</button>
+        </div>
+
+        <div class="page" id="p4">
+            <h1>我的心里话 ✨</h1>
+            
+            <video controls playsinline>
+                <source src="video.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+
+            <button type="button" onclick="submitAndNext()">下一步</button>
+        </div>
+
+        <div class="page" id="p5">
+            <h1>爱你哟！ 💜</h1>
+            <p>你的选择我已经收到啦。期待我们的约会！</p>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    // Хуудас шилжүүлэх үйлдэл
+    function nextPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+    }
+
+    // Хуанлийн өдрүүд үүсгэх үйлдэл
+    function generateCalendar(monthName, days, containerId) {
+        const container = document.getElementById(containerId);
+        for (let i = 1; i <= days; i++) {
+            let dayDiv = document.createElement('div');
+            dayDiv.className = 'day';
+            dayDiv.innerText = i;
+            dayDiv.onclick = function() { selectDate(this, monthName, i); };
+            container.appendChild(dayDiv);
+        }
+    }
+
+    // 5-р сард 31 хоног, 6-р сард 30 хоногтой
+    generateCalendar('5月', 31, 'may-grid');
+    generateCalendar('6月', 30, 'june-grid');
+
+    // Өдөр сонгох үйлдэл
+    function selectDate(element, month, day) {
+        document.querySelectorAll('.day').forEach(d => d.classList.remove('selected-day'));
+        element.classList.add('selected-day');
+        document.getElementById('selectedDate').value = month + day + "日";
+    }
+
+    // Өдөр сонгосон эсэхийг шалгаад дараагийн хуудас руу шилжих
+    function checkDateAndNext(pageId) {
+        const selected = document.getElementById('selectedDate').value;
+        if (!selected) {
+            alert("请选择一个日期！(Please select a date)");
+        } else {
+            nextPage(pageId);
+        }
+    }
+
+    // Form-ийг илгээх үйлдэл (Formspree рүү)
+    function submitAndNext() {
+        const form = document.getElementById('loveForm');
+        
+        // Хоол сонгосон эсэхийг шалгах
+        const foodSelected = document.querySelector('input[name="food"]:checked');
+        if(!foodSelected) {
+            alert("请选择你想吃的食物！(Please select your food)");
+            return;
+        }
+
+        const formData = new FormData(form);
+
+        // Formspree рүү дата явуулах
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+        }).then(response => {
+            if (response.ok) {
+                nextPage('p5');
+            } else {
+                alert("出错啦，请重试。(An error occurred, please try again)");
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
