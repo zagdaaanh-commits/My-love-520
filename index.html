@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>给宝贝的520惊喜</title>
     <style>
-        /* Өнгөний тохиргоо (Нил ягаан) */
         :root { 
             --primary-purple: #9b5de5; 
             --hover-purple: #8338ec;   
@@ -69,7 +68,6 @@
         
         video, iframe { width: 100%; border-radius: 15px; margin-top: 15px; border: none; }
         
-        /* Хуанлийн хэсгийн загвар */
         .calendar-container {
             max-height: 280px; 
             overflow-y: auto; 
@@ -94,6 +92,20 @@
         }
         .day:hover { background: var(--primary-purple); color: white; }
         .selected-day { background: var(--primary-purple) !important; color: white; font-weight: bold; transform: scale(1.1); }
+        
+        /* Шинээр нэмэгдсэн текст оруулах нүдний загвар */
+        #otherFoodInput {
+            display: none; 
+            width: 85%; 
+            padding: 10px; 
+            margin-top: 5px; 
+            margin-left: 10px; 
+            border: 1.5px solid var(--primary-purple); 
+            border-radius: 10px; 
+            font-family: inherit; 
+            outline: none;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -123,20 +135,19 @@
             <button type="button" onclick="checkDateAndNext('p3')">下一步</button>
         </div>
 
-            <div class="page" id="p3">
+        <div class="page" id="p3">
             <h1>想吃什么？ 🍴</h1>
             <div class="options">
                 <label><input type="radio" name="food" value="中餐" onclick="toggleOther(false)"> 中餐 (Chinese food)</label>
                 <label><input type="radio" name="food" value="意大利菜" onclick="toggleOther(false)"> 意大利菜 (Italian food)</label>
                 <label><input type="radio" name="food" value="俄国菜" onclick="toggleOther(false)"> 俄国菜 (Russian food)</label>
                 <label><input type="radio" name="food" value="海鲜" onclick="toggleOther(false)"> 海鲜 (Seafood)</label>
-                <label><input type="radio" name="food" value="其他" onclick="toggleOther(true)"required> 其他 (Other)</label>
+                <label><input type="radio" name="food" value="其他" onclick="toggleOther(true)"> 其他 (Other)</label>
                 
-                <input type="text" id="otherfoodInput" name="customFood" placeholder="你想吃什么？(What do you want?)" style="display:none; width: 85%; padding: 10px; margin-top: 5px; margin-left: 10px; border: 1.5px solid var(--primary-purple); border-radius: 10px; font-family: inherit; outline: none;">
+                <input type="text" id="otherFoodInput" name="customFood" placeholder="你想吃什么？(What do you want?)">
             </div>
-            <button type="button" onclick="nextPage('p4')">下一步</button>
+            <button type="button" onclick="checkFoodAndNext('p4')">下一步</button>
         </div>
-
 
         <div class="page" id="p4">
             <h1>我的心里话 ✨</h1>
@@ -158,13 +169,11 @@
 </div>
 
 <script>
-    // Хуудас шилжүүлэх үйлдэл
     function nextPage(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
     }
 
-    // Хуанлийн өдрүүд үүсгэх үйлдэл
     function generateCalendar(monthName, days, containerId) {
         const container = document.getElementById(containerId);
         for (let i = 1; i <= days; i++) {
@@ -176,18 +185,15 @@
         }
     }
 
-    // 5-р сард 31 хоног, 6-р сард 30 хоногтой
     generateCalendar('5月', 31, 'may-grid');
     generateCalendar('6月', 30, 'june-grid');
 
-    // Өдөр сонгох үйлдэл
     function selectDate(element, month, day) {
         document.querySelectorAll('.day').forEach(d => d.classList.remove('selected-day'));
         element.classList.add('selected-day');
         document.getElementById('selectedDate').value = month + day + "日";
     }
 
-    // Өдөр сонгосон эсэхийг шалгаад дараагийн хуудас руу шилжих
     function checkDateAndNext(pageId) {
         const selected = document.getElementById('selectedDate').value;
         if (!selected) {
@@ -197,20 +203,40 @@
         }
     }
 
-    // Form-ийг илгээх үйлдэл (Formspree рүү)
-    function submitAndNext() {
-        const form = document.getElementById('loveForm');
-        
-        // Хоол сонгосон эсэхийг шалгах
+    // "Бусад" сонголтыг зохицуулах функц
+    function toggleOther(show) {
+        const otherInput = document.getElementById('otherFoodInput');
+        if (show) {
+            otherInput.style.display = 'block';
+        } else {
+            otherInput.style.display = 'none';
+            otherInput.value = ''; 
+        }
+    }
+
+    // Хоол сонгосон эсэхийг шалгах
+    function checkFoodAndNext(pageId) {
         const foodSelected = document.querySelector('input[name="food"]:checked');
         if(!foodSelected) {
             alert("请选择你想吃的食物！(Please select your food)");
             return;
         }
+        
+        // Хэрэв "Бусад"-ыг сонгосон бол текст бичсэн эсэхийг шалгах
+        if(foodSelected.value === '其他') {
+            const customFood = document.getElementById('otherFoodInput').value.trim();
+            if(!customFood) {
+                alert("你想吃什么？请填写！(Please type what you want to eat)");
+                return;
+            }
+        }
+        nextPage(pageId);
+    }
 
+    function submitAndNext() {
+        const form = document.getElementById('loveForm');
         const formData = new FormData(form);
 
-        // Formspree рүү дата явуулах
         fetch(form.action, {
             method: 'POST',
             body: formData,
