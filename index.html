@@ -126,13 +126,13 @@
             <div class="page" id="p3">
             <h1>想吃什么？ 🍴</h1>
             <div class="options">
-                <label><input type="radio" name="food" value="中餐" onclick="toggleOther(false)" required> 中餐 (Chinese food)</label>
+                <label><input type="radio" name="food" value="中餐" onclick="toggleOther(false)"> 中餐 (Chinese food)</label>
                 <label><input type="radio" name="food" value="意大利菜" onclick="toggleOther(false)"> 意大利菜 (Italian food)</label>
                 <label><input type="radio" name="food" value="俄国菜" onclick="toggleOther(false)"> 俄国菜 (Russian food)</label>
                 <label><input type="radio" name="food" value="海鲜" onclick="toggleOther(false)"> 海鲜 (Seafood)</label>
-                <label><input type="radio" name="food" value="其他" onclick="toggleOther(true)"> 其他 (Other)</label>
+                <label><input type="radio" name="food" value="其他" onclick="toggleOther(true)"required> 其他 (Other)</label>
                 
-                <input type="text" id="其他菜Input" name="customFood" placeholder="你想吃什么？(What do you want?)" style="display:none; width: 85%; padding: 10px; margin-top: 5px; margin-left: 10px; border: 1.5px solid var(--primary-purple); border-radius: 10px; font-family: inherit; outline: none;">
+                <input type="text" id="otherfoodInput" name="customFood" placeholder="你想吃什么？(What do you want?)" style="display:none; width: 85%; padding: 10px; margin-top: 5px; margin-left: 10px; border: 1.5px solid var(--primary-purple); border-radius: 10px; font-family: inherit; outline: none;">
             </div>
             <button type="button" onclick="nextPage('p4')">下一步</button>
         </div>
