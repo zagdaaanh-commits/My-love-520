@@ -93,8 +93,8 @@
         .day:hover { background: var(--primary-purple); color: white; }
         .selected-day { background: var(--primary-purple) !important; color: white; font-weight: bold; transform: scale(1.1); }
         
-        /* Шинээр нэмэгдсэн текст оруулах нүдний загвар */
-        #otherFoodInput {
+        /* Бусад гэдгийг сонгоход гарах текст оруулах нүднүүдийн загвар */
+        #otherFoodInput, #otherActivityInput {
             display: none; 
             width: 85%; 
             padding: 10px; 
@@ -111,7 +111,7 @@
 <body>
 
 <div class="container">
-    <form id="loveForm" action="https://formspree.io/f/meevbpnk" method="POST">
+    <form id="loveForm" action"https://formspree.io/f/meevbpnk" method="POST">
         
         <div class="page active" id="p1">
             <h1>我爱你 💜</h1>
@@ -138,11 +138,11 @@
         <div class="page" id="p3">
             <h1>想吃什么？ 🍴</h1>
             <div class="options">
-                <label><input type="radio" name="food" value="中餐" onclick="toggleOther(false)"> 中餐 (Chinese food)</label>
-                <label><input type="radio" name="food" value="意大利菜" onclick="toggleOther(false)"> 意大利菜 (Italian food)</label>
-                <label><input type="radio" name="food" value="俄国菜" onclick="toggleOther(false)"> 俄国菜 (Russian food)</label>
-                <label><input type="radio" name="food" value="海鲜" onclick="toggleOther(false)"> 海鲜 (Seafood)</label>
-                <label><input type="radio" name="food" value="其他" onclick="toggleOther(true)"> 其他 (Other)</label>
+                <label><input type="radio" name="food" value="中餐" onclick="toggleOtherFood(false)"> 中餐 (Chinese food)</label>
+                <label><input type="radio" name="food" value="意大利菜" onclick="toggleOtherFood(false)"> 意大利菜 (Italian food)</label>
+                <label><input type="radio" name="food" value="俄国菜" onclick="toggleOtherFood(false)"> 俄国菜 (Russian food)</label>
+                <label><input type="radio" name="food" value="海鲜" onclick="toggleOtherFood(false)"> 海鲜 (Seafood)</label>
+                <label><input type="radio" name="food" value="其他" onclick="toggleOtherFood(true)"> 其他 (Other)</label>
                 
                 <input type="text" id="otherFoodInput" name="customFood" placeholder="你想吃什么？(What do you want?)">
             </div>
@@ -150,6 +150,19 @@
         </div>
 
         <div class="page" id="p4">
+            <h1>去做点什么呢？ 🎨</h1>
+            <div class="options">
+                <label><input type="radio" name="activity" value="陶艺" onclick="toggleOtherActivity(false)"> 一起做陶艺 </label>
+                <label><input type="radio" name="activity" value="逛公园" onclick="toggleOtherActivity(false)"> 逛公园 </label>
+                <label><input type="radio" name="activity" value="看展" onclick="toggleOtherActivity(false)"> 看美术馆/博物馆 </label>
+                <label><input type="radio" name="activity" value="其他" onclick="toggleOtherActivity(true)"> 其他 (Other)</label>
+                
+                <input type="text" id="otherActivityInput" name="customActivity" placeholder="你想做什么？(What do you want to do?)">
+            </div>
+            <button type="button" onclick="checkActivityAndNext('p5')">下一步</button>
+        </div>
+
+        <div class="page" id="p5">
             <h1>我的心里话 ✨</h1>
             
             <video controls playsinline>
@@ -160,7 +173,7 @@
             <button type="button" onclick="submitAndNext()">下一步</button>
         </div>
 
-        <div class="page" id="p5">
+        <div class="page" id="p6">
             <h1>爱你哟！ 💜</h1>
             <p>你的选择我已经收到啦。期待我们的约会！</p>
         </div>
@@ -203,8 +216,8 @@
         }
     }
 
-    // "Бусад" сонголтыг зохицуулах функц
-    function toggleOther(show) {
+    // Хоолны "Бусад" сонголтыг зохицуулах
+    function toggleOtherFood(show) {
         const otherInput = document.getElementById('otherFoodInput');
         if (show) {
             otherInput.style.display = 'block';
@@ -221,8 +234,6 @@
             alert("请选择你想吃的食物！(Please select your food)");
             return;
         }
-        
-        // Хэрэв "Бусад"-ыг сонгосон бол текст бичсэн эсэхийг шалгах
         if(foodSelected.value === '其他') {
             const customFood = document.getElementById('otherFoodInput').value.trim();
             if(!customFood) {
@@ -233,6 +244,35 @@
         nextPage(pageId);
     }
 
+    // Үйл ажиллагааны "Бусад" сонголтыг зохицуулах
+    function toggleOtherActivity(show) {
+        const otherInput = document.getElementById('otherActivityInput');
+        if (show) {
+            otherInput.style.display = 'block';
+        } else {
+            otherInput.style.display = 'none';
+            otherInput.value = ''; 
+        }
+    }
+
+    // Үйл ажиллагаа сонгосон эсэхийг шалгах
+    function checkActivityAndNext(pageId) {
+        const activitySelected = document.querySelector('input[name="activity"]:checked');
+        if(!activitySelected) {
+            alert("请选择你想做的事情！(Please select an activity)");
+            return;
+        }
+        if(activitySelected.value === '其他') {
+            const customActivity = document.getElementById('otherActivityInput').value.trim();
+            if(!customActivity) {
+                alert("你想做什么？请填写！(Please type what you want to do)");
+                return;
+            }
+        }
+        nextPage(pageId);
+    }
+
+    // Formspree рүү илгээх
     function submitAndNext() {
         const form = document.getElementById('loveForm');
         const formData = new FormData(form);
@@ -243,7 +283,7 @@
             headers: { 'Accept': 'application/json' }
         }).then(response => {
             if (response.ok) {
-                nextPage('p5');
+                nextPage('p6');
             } else {
                 alert("出错啦，请重试。(An error occurred, please try again)");
             }
